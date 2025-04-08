@@ -37,7 +37,7 @@ The personal shopper example includes 3 agents to handle various customer servic
 Clone the repository:
 
 ```shell
-git clone https://github.com/AzureCosmosDB/multi-agent-spring-ai-cosmos.git
+git clone https://github.com/AzureCosmosDB/multi-agent-spring-ai.git
 cd multi-agent-spring-ai
 ```
 
