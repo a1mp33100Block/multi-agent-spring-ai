@@ -71,6 +71,7 @@ public class CosmosChatSession {
         CosmosItemResponse<ChatSession> response  = container.createItem(session).block();
         return response.getItem().getId();
     }
+
     public void patchActiveAgent(String sessionId, String userId, String tenantId, String agentName) {
         try {
             // Define patch operations (e.g., update "name" and add "status")
@@ -86,11 +87,33 @@ public class CosmosChatSession {
             ).block();
 
             ChatSession updatedItem = response.getItem();
-            logger.info("Patched item: {}", updatedItem.getId());
+            logger.info("Patched active agent for item: {}", updatedItem.getId());
         } catch (CosmosException e) {
-            logger.error("Patch failed: {}", e.getMessage());
+            logger.error("Patch active agent failed for item: {}", e.getMessage());
         }
     }
+
+    public void patchSessionName(String sessionId, String userId, String tenantId, String sessionName) {
+        try {
+            // Define patch operations (e.g., update "name" and add "status")
+            CosmosPatchOperations patchOps = CosmosPatchOperations.create()
+                    .replace("/name", sessionName);
+
+            // Perform patch
+            CosmosItemResponse<ChatSession> response = container.patchItem(
+                    sessionId,
+                    new PartitionKeyBuilder().add(tenantId).add(userId).add(sessionId).build(),
+                    patchOps,
+                    ChatSession.class
+            ).block();
+
+            ChatSession updatedItem = response.getItem();
+            logger.info("Patched session name for item: {}", updatedItem.getId());
+        } catch (CosmosException e) {
+            logger.error("Patch session name failed for item : {}", e.getMessage());
+        }
+    }
+
     public String getActiveAgent(String sessionId, String userId, String tenantId) {
         return container.readItem(sessionId, new PartitionKeyBuilder().add(tenantId).add(userId).add(sessionId).build(), ChatSession.class).block().getItem().getActiveAgent();
     }

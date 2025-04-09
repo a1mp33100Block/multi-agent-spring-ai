@@ -28,7 +28,7 @@ The personal shopper example includes 3 agents to handle various customer servic
 - [Azure Cosmos DB account](https://learn.microsoft.com/azure/cosmos-db/create-cosmosdb-resources-portal) - ensure the [vector search](https://learn.microsoft.com/azure/cosmos-db/nosql/vector-search) feature is enabled.
 - [Azure OpenAI API account](https://learn.microsoft.com/azure/ai-services/openai/overview).
 - [Azure OpenAI Embedding Deployment](https://learn.microsoft.com/azure/ai-services/openai/overview) for the RAG model of `text-embedding-ada-002` (with deployment ID of the same).
-- [Azure OpenAI Chat Deployment](https://learn.microsoft.com/azure/ai-services/openai/overview) for the chat model of `gpt-4o` (with deployment ID of the same).
+- [Azure OpenAI Chat Deployment](https://learn.microsoft.com/azure/ai-services/openai/overview) for the chat model of `gpt-4o-mini` (with deployment ID of the same).
 - [Maven](https://maven.apache.org/install.html) 3.8.1 or later installed.
 - [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or later installed.
 
@@ -49,7 +49,7 @@ AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
 
 Ensure that your Azure OpenAI account has the following models deployed (references in `application.properties`):
 
-- `gpt-4o` for chat
+- `gpt-4o-mini` for chat
 - `text-embedding-ada-002` for embeddings
 
 ## Running the app
