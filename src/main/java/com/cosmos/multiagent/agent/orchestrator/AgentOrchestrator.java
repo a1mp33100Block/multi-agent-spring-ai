@@ -55,6 +55,8 @@ public class AgentOrchestrator {
 
         // Route if agent unknown
         if (activeAgent.equals("unknown")) {
+            //if activeAgent is unknown, this is the first user message, so update session name using summarize
+            chatSession.patchSessionName(sessionId, userId, tenantId, summarize(input));
             Map<String, String> routes = new HashMap<>();
             for (Agent agent : agents.values()) {
                 routes.put(agent.name(), agent.systemPrompt());
@@ -124,6 +126,17 @@ public class AgentOrchestrator {
         }
 
         return responseMessages;
+    }
+
+    public String summarize(String userMessage) {
+        String prompt = "Summarize this message in 4-6 words as a session title: " + userMessage;
+
+        List<ChatMessage> messages = List.of(
+                new ChatMessage("user", prompt)
+        );
+
+        String response = chatClient.prompt(prompt).call().content();
+        return response.replaceAll("[\"\n]", "").trim();
     }
 
 

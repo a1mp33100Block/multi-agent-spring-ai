@@ -5,6 +5,8 @@ package com.cosmos.multiagent.api;
 import com.azure.ai.openai.OpenAIClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.core.credential.TokenCredential;
+import com.azure.core.http.HttpClient;
+import com.azure.core.http.netty.NettyAsyncHttpClientBuilder;
 import com.azure.cosmos.CosmosAsyncClient;
 import com.azure.cosmos.CosmosClientBuilder;
 import com.azure.identity.DefaultAzureCredentialBuilder;
@@ -32,6 +34,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 
+import java.time.Duration;
 import java.util.List;
 
 @Configuration
@@ -71,10 +74,19 @@ public class MultiAgentConfig extends AbstractCosmosConfiguration {
     }
 
     @Bean
+    public HttpClient customHttpClient() {
+        return new NettyAsyncHttpClientBuilder()
+                .readTimeout(Duration.ofSeconds(120)) // or more
+                .writeTimeout(Duration.ofSeconds(120))
+                .responseTimeout(Duration.ofSeconds(120))
+                .build();
+    }
+    @Bean
     public OpenAIClient azureOpenAIClient(TokenCredential tokenCredential) {
         return new OpenAIClientBuilder()
                 .credential(tokenCredential)
                 .endpoint(azureOpenAIEndpoint)
+                .httpClient(customHttpClient())
                 .buildClient();
     }
 
@@ -82,7 +94,8 @@ public class MultiAgentConfig extends AbstractCosmosConfiguration {
     public OpenAIClientBuilder azureOpenAIClientBuilder(TokenCredential tokenCredential) {
         return new OpenAIClientBuilder()
                 .credential(tokenCredential)
-                .endpoint(azureOpenAIEndpoint);
+                .endpoint(azureOpenAIEndpoint)
+                .httpClient(customHttpClient());
     }
 
 
